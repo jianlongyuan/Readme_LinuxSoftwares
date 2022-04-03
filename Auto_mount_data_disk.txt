@@ -1,0 +1,5 @@
+Functuon: Auto mount data disk of windows to linux
+1.Input the order in your terminal(root):
+	vi /etc/fstab
+2.Add the order to the last line of "fstab" file:
+	/dev/sda6  /media/data vfat rw,umask=0000,defaults 0 0

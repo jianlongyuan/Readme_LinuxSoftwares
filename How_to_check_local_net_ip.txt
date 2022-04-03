@@ -1,0 +1,15 @@
+
+1. Make sure your linux has installed the 'nmap', if not, install it by using:
+	sudo yum install nmap
+
+2. Check your computer's ip by using:
+	ifconfig -a
+
+3. Use nmap to check all computers's ip by using:
+		nmap -sP xxx.xx.xx.0/24
+	here:
+		after step 2,
+		if your compters's inet addr is
+			 172.19.21.140
+	    	then " -sP xxx.xx.xx.0/24 " should be like 
+			nmap -sP 172.19.21.0/24

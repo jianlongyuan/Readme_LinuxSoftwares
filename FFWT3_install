@@ -1,0 +1,21 @@
+#
+# Created by Kevin at 20171129
+#
+
+1. Use root role
+
+2. Decide the installation directory by using flag ' --prefix=/usr/local/fftw ' like that
+
+	./configure --prefix=/usr/local/fftw
+
+3. make 
+
+4. make install
+
+5. Edit the environment by adding
+
+	export FFTW_PATH=/usr/local/fftw/bin:$FFTW_PATH
+	export FFTW_INC=/usr/local/fftw/include:$FFTW_INC
+	export FFTW_LIB=/usr/local/fftw/lib:$FFTW_LIB
+  to	
+  	~/.bash_profile

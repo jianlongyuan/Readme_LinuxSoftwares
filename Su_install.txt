@@ -1,0 +1,34 @@
+Centos SU installation
+
+1.  vi .bashrc
+
+    export CWPROOT=/home/fxb/cwp
+    export PATH=$PATH:$CWPROOT/bin
+ 
+2.  这个可以不用： 
+    vi /etc/profile
+
+    #CWPROOT=/home/fxb/cwp
+    #PATH=$PATH:$HOME/bin:${CWPROOT}/bin
+    export CWPROOT=/home/fxb/cwp
+    export PATH=$PATH:$CWPROOT/bin
+
+3.  source . bashrc  
+    source /etc/profile
+
+4.  echo $CWPROOT;
+    echo $PATH;
+
+5.  #install
+
+    make install (to install the basic set of codes)
+    make xtinstall (to install the X-toolkit applications)
+    make finstall (to install the Fortran codes)
+    make mglinstall (to install the Mesa/ Open GL items)
+
+    make xminstall (to install the Motif application)(nonessential)
+    make utils (to install libcwputils) (nonessential)
+
+3.  #test install 
+    suplane|suxwigb &
+

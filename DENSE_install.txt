@@ -1,0 +1,69 @@
+#
+# Created by Kevin at 09/03/2018
+#
+
+1. Download sources
+
+	1.1 Download FFTW  (e.g. fftw-3.3.5.tar ) from
+        http://www.fftw.org/download.html
+	
+	1.2 Download Linux's Intel parallel software(e.g. parallel_studio_xe_2016.tgz) from
+        https://software.intel.com/zh-cn/qualify-for-free-software/student
+			Tips: This software contains Fotran and c compiler. And it's free for student,
+				but one must have a valid institution email address(e.g. xxx.cdut.edu.cn),which
+				will get the serial number after submission.
+
+	1.3 Download DENISE codes(e.g. DENISE-Black-Edition-master.zip) from
+		https://github.com/daniel-koehn/DENISE-Black-Edition
+	   
+	1.4 Download DENISE models(e.g. DENISE-Black-Edition-master.zip) from
+		https://github.com/daniel-koehn/DENISE-Benchmark
+		
+2. Installation
+
+	2.1 FFTW
+		Use root role
+		Decide the installation directory by using flag ' --prefix=/usr/local/fftw ' like that
+			$ ./configure --prefix=/usr/local/fftw
+		$ make
+
+		$ make install
+
+		$ vi ~/.bashrc ( Add three lines as below)
+			export FFTW_PATH=/usr/local/fftw/bin:$FFTW_PATH
+			export FFTW_INC=/usr/local/fftw/include:$FFTW_INC
+			export FFTW_LIB=/usr/local/fftw/lib:$FFTW_LIB
+		$ source ~/.bashrc
+			
+	2.2 parallel_studio_xe_2016
+		$ tar zxvf parallel_studio_xe_2016.tgz
+		$ cd parallel_studio_xe_2016
+		$ ./install.sh or ./install_GUI.sh (Using default options)
+		$ vi ~/.bashrc ( Add three lines as below)
+			source /opt/intel/bin/iccvars.sh intel64
+			source /opt/intel/impi/5.1.1.109/bin64/mpivars.sh
+			source /opt/intel/bin/compilervars.sh intel64
+		$ source ~/.bashrc
+		$ which mpicc (If everything is ok,then you can see the path as below) 
+			/opt/intel/compilers_and_libraries_2016.0.109/linux/mpi/intel64/bin/mpicc
+	
+	2.3 DENISE codes
+		Go to the directory you want to put the codes, and upzip the zip file:
+			$ unzip DENISE-Black-Edition-master.zip
+			
+		In the DENISE-Black-Edition-master/libcseife directory simply use the shell script:
+			$ make
+			
+		Links to the include and lib directory of FFTW in the Makefile in DENISE-Black-Edition-master/src directory, e.g.
+			SFLAGS=-L./../libcseife -L$//usr/local/fftw/lib
+			IFLAGS=-I./../libcseife -I$//usr/local/fftw/include
+		
+		To compile the main program DENISE in DENISE-Black-Edition-master/src simply type:
+			$ make denise
+	
+	2.4 DENISE models
+		Just unzip the DENISE-Black-Edition-master.zip:
+			$ unzip DENISE-Black-Edition-master.zip
+		
+		Copy the model files you wanted to the corresponding directories of DENISE codes
+	

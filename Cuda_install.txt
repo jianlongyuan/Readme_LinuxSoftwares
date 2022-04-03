@@ -1,0 +1,57 @@
+一、拉黑nouveau. 具体为何就不多说了。先获得root权限。然后执行以下步骤：
+vi   /etc/modprobe.d/blacklist.conf  在此文件后面添加：blacklist nouveau
+使用 dracut重新建立  initramfs image file:（root）
+mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.bak
+重新建立 the initramfs file:(root)
+dracut -v /boot/initramfs-$(uname -r).img $(uname -r)
+二、因为你在安装samples时会提示找不到一个库，具体的就不说了。照下面操作就是了
+(root)：yum install freeglut*
+ls -l /usr/lib/ |grep glut（这一步是查看）
+cd /usr/lib/
+ln -s libglut.so.3 libglut.so
+ls -l |grep glut
+执行完 你将看到多了一行：lrwxrwxrwx 1 root root 12 Jul 22 14:52 libglut.so -> libglut.so.3
+三、设置环境变量：
+普通用户下：vi .bashrc或者（root）vi /etc/profile
+export PATH=$PATH:/usr/local/cuda-5.0/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-5.0/lib
+以上这些都是准备；
+四、reboot;（重启）
+五、进入系统后,获得root权限，
+       init 3
+       进入命令行模式；
+       进入安装文件（cuda_5.0*.run）的位置：sh cuda_5.0*.run;
+      根据提示操作即可，主要有：
+      1、q
+      2、accept
+      3、y
+      4、y
+      5、回车
+      6、y
+      7、回车
+到这儿，你就等一会儿了；几分钟后你就会看到安装完成；
+接下来你以为你就安装完了就可以用了吗？错，如果你直接使用，仍然是不行的。
+然而你得获得，root权限，然后执行：nvidia-xconfig -query-gpu-info
+有显示你的显卡信息，那就恭喜你；enjoy it!
+具体是什么原因我不懂，忘了说我的是双显卡，一个集成一个独立。这可能是造成这个问题的原因，不管怎么样现在是能使用了。不过只能在普通用户下使用，root使用的时候会提示缺少libcudart.so.5实际上我的路径里是有这个文件的，不知为何出错；不过无所谓我都是用普通用户进行处理的。
+到这里安装就完成了。给书上的一个程序，可以用来测试：
+#include
+__global__ void add(int a,int b,int *c)
+{
+    *c = a+b;
+}
+
+int main(void)
+{
+    int c=0;
+    int *dev_c;
+    cudaMalloc((void** )&dev_c,sizeof(int));
+    add<<<1,1>>>(2,7,dev_c);
+    cudaMemcpy(&c,dev_c,sizeof(int),cudaMemcpyDeviceToHost);
+    printf("2+7 = %d\n",c);
+    cudaFree(dev_c);
+    return 0;
+}
+如果得到正确的结果那就恭喜你了，可以了。不过每次开机使用CUDA都要使用：nvidia-xconfig -query-gpu-info之后才能使用CUDA。
+
+这是我的安装，也许你没遇见这样的问题，那很好。但是你要是遇见了这样的问题可以按照上面的方法解决。有些步骤虽然没说明原来，但是那样做肯定是有必要的，至少对于我的机子是这样的。

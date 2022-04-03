@@ -1,0 +1,19 @@
+问题：在linux操作系统下，我们有时打开在windows下的txt文件，
+      发现在windows下能正常显示的txt文件出现了中文乱码。
+
+分析：出现这种情况的原因为两种操作系统的中文压缩方式不同，
+      在windows环境中中文压缩一般为gbk，而在linux环境中为utf8，
+      这就导致了在windows下能正常显示txt文件在linux环境下打开呈现了乱码状态。
+
+解决方法：在linux用iconv命令，如乱码文件名为shujujiegou.txt，
+          那么在终端输入如下命令：
+          例子：
+               iconv -f gbk -t utf8 shujujiegou.txt > shujujiegou.txt.utf8  
+
+
+	  用ls命令查看结果：
+	  例子：
+		$ ls  
+		shujujiegou.txt  shujujiegou.txt.utf8  
+
+	发现重新生成了一个shujujiegou.txt.utf8文件, 打开之后就能正常显示中文。

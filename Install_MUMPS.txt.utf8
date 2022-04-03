@@ -1,0 +1,119 @@
+http://m.blog.csdn.net/blog/jiangjjp2812/49632697
+
+1.下载安装包MUMPS_5.0.1.tar.gz  这是目前最新版本的安装包。下载地址 http://mumps.enseeiht.fr/ 但下载需要提交申请，提交后隔天会发送到你邮箱里。或者在百度云下载 http://pan.baidu.com/s/1eQJfYRS
+2. MUMPS需要连接下面这些库文件。这些安装包都可以在网上免费下载得到。
+-> MPI
+-> BLAS library
+-> BLACS library
+-> ScaLAPACK library
+本人尝试了安装这些文件，但过程一波三折，最后可能是安装版本问题没有成功。由于我电脑处理器是intel的，我干脆安装Intel MKL，里面包含了这些库文件，不需要单独安装，省去了不少麻烦。
+3. 安装IntelMKL。
+     parellel_studio.xe_2016.tgz下载地址https://software.intel.com/en-us/qualify-for-free-software，这个包Intel只对部分人免费。如果是学生并有学校官方邮箱则可以通过Student身份申请。安装包很大有3.58G，里面包含了很多开发工具，包括icc，ifort，mpiicc,mpifort等，当然包含MKL库。为了避免后面安装MUMPS兼容性问题，我用到了mpiicc和mpiifort编译器，所以我直接安装整个Intel安装包。安装整个包需要磁盘空间大约7G。如果在虚拟机上运行CentOS，碰到磁盘空间不足则需要磁盘扩容，参见http://blog.csdn.net/fancylovejava/article/details/8688405
+将parellel_studio.xe_2016.tgz解压，进入解压包目录后 在终端运行
+$./install_GUI.sh 实现界面安装，这个安装和window程序一样，但中间可以选择修改安装路径（默认是在/opt/intel）,如果之前进行了磁盘扩容，并选择空间挂载的方式，则路径选择在挂载的空间下。如/cm/opt/intel。（注：扩容磁盘空间被挂载到/cm/下，只能在这个路径下使用扩容的磁盘空间）。
+4.安装MUMPS
+解压MUMPS_5.0.1.tar.gz包后， 查看README和INSTALL文件，里面有一些简单的安装介绍。由于我用的Intel
+MKL库。因此我选择了Make.inc文件夹下的Makefile.INTEL.PAR实现并行库编译。复制在MUMP_5.0.1根目录下，并改名Makefile.inc。内容如下。红色的是需要注意的和更改的项。蓝色的SEFTDEF路径是额外补上去的库。没有这个 库路径在编译过程中有些文件lib找不到。
+
+#
+#  This file is part of MUMPS 5.0.1, released
+#  on Thu Jul 23 17:08:29 UTC 2015
+#
+#Begin orderings
+
+# NOTE that PORD is distributed within MUMPS by default. If you would like to
+# use other orderings, you need to obtain the corresponding package and modify
+# the variables below accordingly.
+# For example, to have Metis available within MUMPS:
+#          1/ download Metis and compile it
+#          2/ uncomment (suppress # in first column) lines
+#             starting with LMETISDIR,  LMETIS
+#          3/ add -Dmetis in line ORDERINGSF
+#             ORDERINGSF  = -Dpord -Dmetis
+#          4/ Compile and install MUMPS
+#             make clean; make   (to clean up previous installation)
+#
+#          Metis/ParMetis and SCOTCH/PT-SCOTCH (ver 6.0 and later) orderings are now available for MUMPS.
+#
+
+#SCOTCHDIR  = ${HOME}/scotch_6.0
+#ISCOTCH    = -I$(SCOTCHDIR)/include  # Should be provided for pt-scotch (not needed for Scotch)
+#
+# You have to choose one among the following two lines depending on
+# the type of analysis you want to perform. If you want to perform only
+# sequential analysis choose the first (remember to add -Dscotch in the ORDERINGSF
+# variable below); for both parallel and sequential analysis choose the second 
+# line (remember to add -Dptscotch in the ORDERINGSF variable below)
+
+#LSCOTCH    = -L$(SCOTCHDIR)/lib -lesmumps -lscotch -lscotcherr
+#LSCOTCH    = -L$(SCOTCHDIR)/lib -lptesmumps -lptscotch -lptscotcherr -lscotch
+
+
+LPORDDIR = $(topdir)/PORD/lib/
+IPORD    = -I$(topdir)/PORD/include/
+LPORD    = -L$(LPORDDIR) -lpord
+
+#LMETISDIR = /local/metis/
+#IMETIS    = # should be provided if you use parmetis, to access parmetis.h
+
+# You have to choose one among the following two lines depending on
+# the type of analysis you want to perform. If you want to perform only
+# sequential analysis choose the first (remember to add -Dmetis in the ORDERINGSF
+# variable below); for both parallel and sequential analysis choose the second 
+# line (remember to add -Dparmetis in the ORDERINGSF variable below)
+
+#LMETIS    = -L$(LMETISDIR) -lmetis
+#LMETIS    = -L$(LMETISDIR) -lparmetis -lmetis
+
+# The following variables will be used in the compilation process.
+# Please note that -Dptscotch and -Dparmetis imply -Dscotch and -Dmetis respectively.
+#ORDERINGSF = -Dscotch -Dmetis -Dpord -Dptscotch -Dparmetis
+ORDERINGSF  = -Dpord
+ORDERINGSC  = $(ORDERINGSF)
+
+LORDERINGS = $(LMETIS) $(LPORD) $(LSCOTCH)
+IORDERINGSF = $(ISCOTCH)
+IORDERINGSC = $(IMETIS) $(IPORD) $(ISCOTCH)
+
+#End orderings
+########################################################################
+################################################################################
+
+PLAT    =
+LIBEXT  = .a
+OUTC    = -o 
+OUTF    = -o 
+RM = /bin/rm -f
+CC = mpiicc
+FC = mpiifort
+FL = mpiifort
+AR = ar vr 
+#RANLIB = ranlib
+RANLIB  = echo
+# Make this variable point to the path where the Intel MKL library is
+# installed. It is set to the default install directory for Intel MKL. 
+MKLROOT=/cm/opt/mkl/lib/intel64
+SCALAP = -L$(MKLROOT) -lmkl_scalapack_lp64 -lmkl_blacs_intelmpi_lp64
+INCPAR = -I/cm/opt/mkl/lib/ #/usr/local/include
+# LIBPAR = $(SCALAP)  -L/usr/local/lib/ -llamf77mpi -lmpi -llam
+SEFTDEF = -L /cm/opt/compilers_and_libraries_2016.0.109/linux/mpi/intel64/lib/
+LIBPAR = $(SCALAP) $(SEFTDEF) # seft add $(SEFTDEF)
+#LIBPAR = -lmpi++ -lmpi -ltstdio -ltrillium -largs -lt
+INCSEQ = -I$(topdir)/libseq
+LIBSEQ  =  -L$(topdir)/libseq -lmpiseq
+#LIBBLAS = -L/usr/lib/xmm/ -lf77blas -latlas
+LIBBLAS = -L$(MKLROOT) -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core 
+LIBOTHERS = -lpthread -openmp
+#Preprocessor defs for calling Fortran from C (-DAdd_ or -DAdd__ or -DUPPER)
+CDEFS   = -DAdd_
+
+#Begin Optimized options
+OPTF    = -O  -DALLOW_NON_INIT -nofor_main
+OPTL    = -O -nofor_main
+OPTC    = -O
+#End Optimized options
+INCS = $(INCPAR)
+LIBS = $(LIBPAR)
+LIBSEQNEEDED =
+
+修改完成后执行命令make all lib。则会在   MUMPS_5.0.1/lib 目录下生成libcmumps.a   libdmumps.a  libmumps_common.a  libpord.a  libsmumps.a  libzmumps.a 这6个lib文件。（注：如果只执行make，则只会生成libdmumps.a  libmumps_common.a libpord.a 其余文件不生成）

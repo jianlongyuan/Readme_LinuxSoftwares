@@ -1,0 +1,141 @@
+1、NTFS  :  http://289972458.iteye.com/blog/1547454
+
+32位系统： wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-1.el6.rf.i686.rpm
+
+64位系统： wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
+
+32 bit  :  rpm -ivh rpmforge-release-0.5.2-1.el6.rf.i686.rpm
+64bit   :  rpm -ivh rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm
+
+
+yum install ntfs-3g
+
+
+2、CUDA
+一、拉黑nouveau. 具体为何就不多说了。先获得root权限。然后执行以下步骤：
+vi   /etc/modprobe.d/blacklist.conf 
+ 
+在此文件后面添加：blacklist nouveau
+
+mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.bak
+
+dracut -v /boot/initramfs-$(uname -r).img $(uname -r)
+
+
+二、因为你在安装samples时会提示找不到一个库，具体的就不说了。照下面操作就是了
+yum install freeglut*
+ls -l /usr/lib/ |grep glut（这一步是查看）
+cd /usr/lib/
+ln -s libglut.so.3 libglut.so
+ls -l |grep glut
+
+
+export PATH=$PATH:/usr/local/cuda-5.5/bin 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-5.5/lib64
+
+export NETCDFHOME=/usr/local/NETCDF
+export GMTHOME=/usr/local/GMT
+export PATH=$PATH:$NETCDFHOME:$GMTHOME/bin
+
+export CWPROOT=/home/fxb/cwp
+export PATH=$PATH:$CWPROOT/bin
+
+3、GMT
+
+1.  netcdf.tar.gz  gmt-4.5.8.tar.bz2 gshhs-2.2.0.tar.bz2 /usr/local
+
+2.  install netcdf.tar.gz
+    tar -zxvf netcdf.tar.gz                     
+    mv netcdf-4.2.1 NETCDF             
+    cd NETCDF                      
+    ./configure --disable-netcdf-4
+    make install
+
+3.  install GMT
+    tar -jxvf gmt-4.5.8.tar.bz2 
+    mv GMT4.5.8 GMT 
+    cd GMT 
+    ./configure --enable-netcdf=/usr/local/NETCDF
+    make install
+
+    如果提示错误缺少：X11/Xaw/Scrollbar.h
+    yum search Xaw  安装search 到的几个软件
+    //注意这是32位系统的，对于64位系统 根据search出的可下载的文件！
+    yum install Xaw3d-devel.i686 libXaw-devel.i686 Xaw3d.i686 libXaw.i686 xfig-plain.i686
+   //这是64位系统的
+    yum install Xaw3d-devel.i686 Xaw3d-devel.x86_64 libXaw-devel.i686 libXaw-devel.x86_64 Xaw3d.i686 Xaw3d.x86_64 libXaw.i686 libXaw.x86_64 xfig-plain.x86_64
+
+    make install (again)
+
+4.  install gshhs-2.2.0.tar.bz2
+ 
+    mv gshhs-2.2.0.tar.bz2 /usr/local/GMT/       
+ 
+    cd  GMT
+    tar -jxvf gshhs-2.2.0.tar.bz2                                          
+ 
+5.  Set environment:
+
+    vi /etc/profile
+
+    export NETCDFHOME=/usr/local/NETCDF
+    export GMTHOME=/usr/local/GMT
+    export PATH=$PATH:$NETCDFHOME:$GMTHOME/bin
+  
+    source /etc/profile
+6.  test installation
+
+    psbasemap -JM7 -R117/126/18/26 -BNEWsf2a3g2:xx:/f3a3g2:y::.test: -P -V
+-K >Test.ps
+
+7.  如果测试时报错，那就logout:root
+    用普通用户，vi .bashrc
+    export NETCDFHOME=/usr/local/NETCDF
+    export GMTHOME=/usr/local/GMT
+    export PATH=$PATH:$NETCDFHOME:$GMTHOME/bin
+
+    source .bashrc
+    还可以测试哈路径是否正确：echo $NETCDFHOME
+                         echo $GMTHOME
+
+4、CWP/SU
+
+1.  vi .bashrc
+
+    export CWPROOT=/home/fxb/cwp
+    export PATH=$PATH:$CWPROOT/bin
+ 
+2.  这个可以不用： 
+    vi /etc/profile
+
+    #CWPROOT=/home/fxb/cwp
+    #PATH=$PATH:$HOME/bin:${CWPROOT}/bin
+    export CWPROOT=/home/fxb/cwp
+    export PATH=$PATH:$CWPROOT/bin
+
+3.  source . bashrc  
+    source /etc/profile
+
+4.  echo $CWPROOT;
+    echo $PATH;
+
+5.  install
+
+    make install (to install the basic set of codes)
+    make xtinstall (to install the X-toolkit applications)
+    make finstall (to install the Fortran codes)
+    make mglinstall (to install the Mesa/ Open GL items)
+
+    make xminstall (to install the Motif application)(nonessential)
+    make utils (to install libcwputils) (nonessential)
+
+3.  test install 
+    suplane|suxwigb &
+
+5、epel ：  http://blog.csdn.net/jackalfly/article/details/7572886 
+rpm -ivh http://download.fedora.redhat.com/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+
+6、mp3  :  http://blog.csdn.net/odaynot/article/details/8462273
+  vidoes  :  http://blog.chinaunix.net/uid-26557245-id-3328745.html

@@ -1,0 +1,53 @@
+Centos SU installation
+
+0. # 在安装之前更新一下源，再输入命令预装软件包:
+	sudo apt-get update
+	sudo apt-get install build-essential
+	sudo apt-get install libx11-dev
+	sudo apt-get install libxt-dev
+	sudo apt-get install libxmu-dev
+	sudo apt-get install libxi-dev
+	sudo apt-get install gfortran
+
+1. # Create a directory for install su, e.g.,
+	mkdir /home/yuanjianglong/cwp_su
+
+2. # Set up environment:
+	vi ~/.bashrc
+	export CWPROOT=/home/yuanjianglong/cwp_su
+	export PATH=$PATH:$CWPROOT/bin
+
+3. # check directory
+	source ~/.bashrc 
+	echo $CWPROOT
+ 
+4.  # Set up configure 
+	cd $CWPROOT
+	tar -xzvf cwp_su_all_43R3.tgz
+	cd src
+	cp configs/Makefile.config_Linux_i686 $CWPROOT/src/Makefile.config
+
+5.  # Install seismic unix
+	make install
+	make xtinstall
+
+6.  #test install 
+    suplane|suxwigb &
+
+
+Tips:
+  Tip 1:  
+	/home/yuanjianlong/cwp_su/include/Xtcwp/Xtcwp.h:18:10: fatal error: X11/Intrinsic.h: No such file or directory
+ #include <X11/Intrinsic.h>
+
+  Solution: 在安装之前更新一下源，再输入命令预装软件包:
+	sudo apt-get update
+	sudo apt-get install build-essential
+	sudo apt-get install libx11-dev
+	sudo apt-get install libxt-dev
+	sudo apt-get install libxmu-dev
+	sudo apt-get install libxi-dev
+	sudo apt-get install gfortran
+
+  Tip 2:  Installation exmaple see: http://blog.sciencenet.cn/blog-2834901-990014.html
+

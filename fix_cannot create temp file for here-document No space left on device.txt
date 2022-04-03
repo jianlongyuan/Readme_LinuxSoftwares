@@ -1,0 +1,9 @@
+
+
+cd /var/log
+du -h --max-depth=1
+sudo rm -rf  ./journal/170ea591f4aa4ea1ae1ba99b70c96d89/
+
+
+cd /var/cache/apt/archives
+sudo rm -rf *deb

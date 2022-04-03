@@ -1,0 +1,8 @@
+1. Download Ext2Fsd and EasyBCD and install
+2. Open Ext2Fsd: Open liunx boot file by: `vi  /boot/grub/menu.lst` 
+3. Copy the whole content of menu.lst
+4. Open EasyBCD: `Add New Entry` --> `NeoGrub` -- > `Install` --> `Configure`
+		 Paste content of step 3 into the txt file and save it
+		 Mind this: (hd0,x), x is your linux system boot file disk
+			    partition
+5. Reboot 

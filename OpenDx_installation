@@ -1,0 +1,71 @@
+目的：在CentOS下安装OpenDx
+
+一 首先需要安装 Motif 和 OpenGL
+
+1.1 安装motif
+
+  1.1.1 下载OpenMotif
+
+	ftp://ftp.ics.com/openmotif/2.3/2.3.0/openmotif-2.3.0.tar.gz
+ 
+  1.1.2 安装OpenMofi
+
+	# yum install libX*
+	# tar -xzvf openmotif-2.3.0.tar.gz
+	# cd openmotif-2.3.0
+	# ./configure
+	# make
+	# make check
+	# make install
+
+	安装过程可能会遇到的问题:
+
+	1）如果在安装过程中出现“X11/extensions/Print.h: No such file or directory”的错误,
+
+	解决方法,在root权限下执行:
+		# yum install libXp-devel
+
+	2）如果在安装过程中出现“X11/bitmaps/gray: No such file or directory”的错误,
+
+	解决方法,在root权限下执行:
+		# yum install xorg-x11-xbitmaps
+
+1.2 安装OpenGL
+
+  下载OpenGL，在root权限下执行: 
+
+	# yum install mesa*
+
+二 安装OpenDx
+	
+2.1 通过以下网址下载OpenDX,点击网页左侧" DOWNLOAD " 子菜单,
+    点击” Source Code ( download ) ”,填写相关信息后下载主程序包dx-4.4.4.tar.gz,样例包:dxsamples-4.4.0.tar.gz
+	http://www.opendx.org/download.html
+
+2.2 通过以下命令解压:
+	# tar -xzvf dx-4.4.4.tar.gz
+	# tar -xzvf dxsamples-4.4.0.tar.gz 
+
+2.3 安装主程序包,在root权限下，以此执行以下命令:
+	# cd dx-4.4.4
+	#./configure
+	#make
+	#make install
+	
+	安装过程可能会遇到的问题:
+	
+	1) make 过程中提示错误: memory.c:69:23: error: linux/sys.h: No such file or directory
+
+	解决方法,在root权限下执行以下命令，获取sys.h的位置:
+                #locate sys.h
+
+	获得sys.h路径（假设为xx）之后，将sys.h复制到/usr/include/linux/sys.h,终端命令如下:
+		#cp  xx   /usr/include/linux/sys.h
+	
+	重新执行make
+
+2.4 安装样例包,在root权限下，以此执行以下命令:
+        # cd dxsamples-4.4.0
+        #./configure
+        #make
+        #make install

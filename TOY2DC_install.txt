@@ -1,0 +1,77 @@
+//
+//	This method is for the computer, which has Intel CPU
+//
+
+1. Download Linux's Intel parallel software(e.g. parallel_studio_xe_2016.tgz) from
+        https://software.intel.com/zh-cn/qualify-for-free-software/student
+	Tips: This software contains Fotran and c compiler. And it's free for student,
+	      but one must have a valid institution email address(e.g. xxx.cdut.edu.cn),which
+	      will get the serial number after submission.
+
+2. Download MUMPS package(e.g. MUMPS_5.0.1.tar.gz) from
+        http://mumps-solver.org/
+        Tips:"Download request submission" is needed.
+
+3. Download TOY2DAC codes(e.g. TOY2DAC_V2.3_2015_29_05.tgz) from
+        https://seiscope2.obs.ujf-grenoble.fr/TOY2DAC,82
+
+4. Download TOOLBOX_OPTIMIZATION codes(e.g. TOOLBOX_22_09_2014_OPTIMIZATION.tgz) from
+        https://seiscope2.obs.ujf-grenoble.fr/SEISCOPE-OPTIMIZATION-TOOLBOX 
+
+5. Install Intel compiler software by following
+	$ tar zxvf parallel_studio_xe_2016.tgz
+	$ cd parallel_studio_xe_2016
+	$ ./install.sh or ./install_GUI.sh (Using default options)
+	$ vi ~/.bashrc ( Add three lines as below)
+		source /opt/intel/bin/iccvars.sh intel64
+		source /opt/intel/impi/5.1.1.109/bin64/mpivars.sh
+		source /opt/intel/bin/compilervars.sh intel64
+	$ source ~/.bashrc
+	$ which mpicc (If everything is ok,then you can see the path as below) 
+		/opt/intel/compilers_and_libraries_2016.0.109/linux/mpi/intel64/bin/mpicc
+
+6. Install MUMPS by following
+	$ tar zxvf MUMPS_5.0.1.tar.gz
+	$ cd MUMPS_5.0.1
+	$ cp Make.inc/Makefile.INTEL.PAR ../Makefile.inc
+	$ make
+	Tips: Check 6 files in MUMPS_5.0.1/lib (libcmumps.a libdmumps.a libmumps_common.a  libpord.a  libsmumps.a  libzmumps.a),
+	      if only 4 files, go back to use " make all lib ".
+		  
+7. Install TOOLBOX_OPTIMIZATION by following
+	$ tar zxvf TOOLBOX_22_09_2014_OPTIMIZATION.tgz
+	$ cd TOOLBOX_OPTIMIZATION
+	$ vi Makefile.inc
+	     check three lines as below, should be
+		CC =  icc
+		FC =  ifort
+		FL =  ifort
+
+	$ make 
+
+8. Install TOY2DAC by following
+	$ tar zxvf TOY2DAC_V2.3_2015_29_05.tgz
+	$ cd TOY2DAC_V2.3_2015_29_05
+	$ cd src
+	$ vi Makefile.inc
+	    modifed	
+		CC = mpicc
+		FC = mpif90
+		FL = mpif90
+		LADIR = /home/ludo/Fortran/
+		LTOOLBOX= /home/ludo/Fortran/TOOLS_BOX/trunk/OPTIMIZATION/
+		LMUMPS=   -L  $(LADIR)//MUMPS_4.7.3/lib -lcmumps
+		IMUMPS = -I $(LADIR)/MUMPS_4.7.3/include
+		LPORD =  -L  $(LADIR)//MUMPS_4.7.3/lib  -lpord
+		IPORD = -I $(LADIR)/MUMPS_4.7.3/PORD/include
+	    to
+		CC = mpiicc
+		FC = mpiifort
+		FL = mpiifort
+	 	LADIR = " The directroy of MUMPS_5.0.1 "
+		LTOOLBOX= " The directroy of TOOLBOX_OPTIMIZATION "
+		LMUMPS=  -L $(LADIR)/MUMPS_5.0.1/lib -lcmumps  -lmumps_common
+		IMUMPS = -I $(LADIR)/MUMPS_5.0.1/include
+		LPORD = -L $(LADIR)/MUMPS_5.0.1/PORD/lib/  -lpord
+		IPORD = -I $(LADIR)/MUMPS_5.0.1/PORD/include
+	$ make

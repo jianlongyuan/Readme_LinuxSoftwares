@@ -1,0 +1,83 @@
+
+1. Download sources
+
+	1.1 Download Anaconda for Linux installer (e.g. Anaconda3-5.1.0-Linux-x86_64 ) from
+        https://www.anaconda.com/download/#linux
+	
+	1.2 Download CUDA Toolkit(e.g. cuda_8.0.61_375.26_linux.run) from
+        https://developer.nvidia.com/cuda-toolkit-archive
+
+	1.3 Download cuDNN(e.g. cudnn-8.0-linux-x64-v6.0-tgz) from
+		https://developer.nvidia.com/cudnn
+	   
+		Tips:
+			This software requires membership of the NVIDIA Developer Program to download.
+			You can create a account or use the account of Kevin as following:
+			Email Address: 314411036@qq.com
+			Passward:Yjl12345
+	
+	
+	
+	
+2. Installation
+
+	2.1 Install Anaconda (root):
+	$ sh Anaconda3-5.0.1-Linux-x86_64.sh
+		Tips: 
+			Important steps as following:
+				>>>"ENTER"
+				>>>yes
+				>>>/usr/local/anaconda3
+				>>>no
+		
+	$ vi /etc/profile
+		Add one lines as below:
+		export PATH=/usr/local/anaconda3bin:$PATH
+		
+	$ source /etc/profile
+
+	2.2 Install CUDA（root）
+	
+		2.2.1 拉黑nouveau
+			$ lsmod | grep nouveau
+			$ blacklist nouveau
+			$ options nouveau modeset=0
+			
+		2.2.2 Edit environment
+			$ vi /etc/profile
+				Add two lines as below:
+					export PATH=$PATH:/usr/local/cuda8.0/bin
+					export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda8.0/lib
+			$ source /etc/profile
+			$reboot
+			
+		2.2.3 install coda8.0	
+			$ init 3
+			$ sh cuda_8.0.61_375.26_linux.run
+				Steps:
+				q
+				accept
+				y
+				y
+				ENTER
+				y
+				ENTER
+			$ nvidia-smi
+			
+	2.3 Install cuDNN（root）
+		$ tar -zxvf cudnn-8.0-linux-x64-v6.0-tgz
+		$ sudo cp cuda/include/cudnn.h /usr/local/cuda8.0/include/
+		$ sudo cp cuda/lib64/libcudnn* /usr/local/cuda8.0/lib64/ -d
+		$ sudo chmod a+r /usr/local/cuda8.0/include/cudnn.h
+		$ sudo chmod a+r /usr/local/cuda8.0/lib64/libcudnn*
+	
+	2.4 Install tensorflow（root）
+		$ conda create -n tensorflow python=3.6
+		$ source activate tensorflow
+		$ pip install tensorflow-gpu
+		$ yes
+		$ source deactivate
+		$ source activate tensorflow
+		
+	
+	

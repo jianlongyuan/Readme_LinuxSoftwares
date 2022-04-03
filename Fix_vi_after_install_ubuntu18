@@ -1,0 +1,13 @@
+Up domn left right and backspace not work after installing ubuntu18.04.1 
+
+1. open /etc/vim/vimrc.tiny using:
+	sudo vi /etc/vim/vimrc.tiny
+
+2. change 
+
+	set compatible
+  to 
+	set nocompatible
+	set backspace=2
+
+3. save and exit
