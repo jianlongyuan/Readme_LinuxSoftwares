@@ -1,0 +1,62 @@
+Ubuntu18 安装 GMT
+
+1.下载
+    netcdf-c-4.8.1.tar.gz （https://downloads.unidata.ucar.edu/netcdf/）
+    gmt-4.5.18-src.tar.bz2  (https://blog.seisman.info/install-gmt4-under-linux/#%E5%AE%89%E8%A3%85-gmt)
+    gshhg-gmt-2.3.7.tar.gz  (https://blog.seisman.info/install-gmt4-under-linux/#%E5%AE%89%E8%A3%85-gmt)
+
+2. 将安装包复制到/usr/local
+   sudo cp -rf gmt-4.5.18-src.tar.bz2  gshhg-gmt-2.3.7.tar.gz netcdf-c-4.8.1.tar.gz /usr/local/
+
+3.  在/usr/local/安装 netcdf
+    cd /usr/local/
+    sudo tar -zxvf netcdf-c-4.8.1.tar.gz                     
+    sudo mv netcdf-c-4.8.1 NETCDF             
+    cd NETCDF                      
+    sudo ./configure --disable-netcdf-4
+    sudo make     
+    sudo make install
+
+    如果提示错误：
+	configure: error: Cannot find m4 utility. Install m4 and try again.
+    则安装：
+	sudo apt install m4
+
+4.  install GMT
+    cd ../
+    sudo  tar -jxvf gmt-4.5.18-src.tar.bz2 
+    sudo mv gmt-4.5.18 GMT 
+    cd GMT 
+    sudo ./configure --enable-netcdf=/usr/local/NETCDF
+    sudo make
+    sudo make install
+
+    如果提示错误缺少：X11/Xaw/Scrollbar.h
+    yum search Xaw  安装search 到的几个软件
+    //注意这是32位系统的，对于64位系统 根据search出的可下载的文件！
+    yum install Xaw3d-devel.i686 libXaw-devel.i686 Xaw3d.i686 libXaw.i686 xfig-plain.i686
+   //这是64位系统的
+    yum install Xaw3d-devel.i686 Xaw3d-devel.x86_64 libXaw-devel.i686 libXaw-devel.x86_64 Xaw3d.i686 Xaw3d.x86_64 libXaw.i686 libXaw.x86_64 xfig-plain.x86_64
+    
+    然后重新：
+    sudo  make install
+
+5.  安装 gshhg-gmt-2.3.7.tar.gz
+    cd ../
+    sudo mv gshhg-gmt-2.3.7.tar.gz /usr/local/GMT/      
+    cd  GMT
+    sudo tar -xvf gshhg-gmt-2.3.7.tar.gz                                          
+ 
+6.  设置环境变量:
+
+    vi ~/.bashrc
+
+    export NETCDFHOME=/usr/local/NETCDF
+    export GMTHOME=/usr/local/GMT
+    export PATH=$PATH:$NETCDFHOME:$GMTHOME/bin
+  
+    source ~/.bashrc
+7.  测试安装是否成功，新建终端输入：
+    psbasemap -JM7 -R117/126/18/26 -BNEWsf2a3g2:xx:/f3a3g2:y::.test: -P -V -K >Test.ps
+    如果提示以下信息，则成功，否则重新按照上述流程按照。
+    psbasemap: Constructing basemap
