@@ -12,7 +12,7 @@ Ubuntu18 安装 GMT
     cd /usr/local/
     sudo tar -zxvf netcdf-c-4.8.1.tar.gz                     
     sudo mv netcdf-c-4.8.1 NETCDF             
-    cd NETCDF                      
+    cd NETCDF                      .
     sudo ./configure --disable-netcdf-4
     sudo make     
     sudo make install
@@ -21,6 +21,8 @@ Ubuntu18 安装 GMT
 	configure: error: Cannot find m4 utility. Install m4 and try again.
     则安装：
 	sudo apt install m4
+    再重新运行:
+	sudo make install
 
 4.  install GMT
     cd ../
