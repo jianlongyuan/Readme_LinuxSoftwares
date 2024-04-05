@@ -1,36 +1,34 @@
 Centos SU installation
 
 0. # 在安装之前更新一下源，再输入命令预装软件包:
-	sudo apt-get update
-	sudo apt-get install build-essential
-	sudo apt-get install libx11-dev
-	sudo apt-get install libxt-dev
-	sudo apt-get install libxmu-dev
-	sudo apt-get install libxi-dev
-	sudo apt-get install gfortran
+    sudo apt-get update
+    sudo apt-get install build-essential libx11-dev libxt-dev libxmu-dev libxi-dev gfortran
 
 1. # Create a directory for install su, e.g.,
-	mkdir /home/yuanjianlong/cwp_su
+    mkdir /home/yjl/cwp_su
+    
+    Noticing: 'yjl' is the user name of your computer
 
 2. # Set up environment:
-	vi ~/.bashrc
-	export CWPROOT=/home/yuanjianglong/cwp_su
-	export PATH=$PATH:$CWPROOT/bin
+    vi ~/.bashrc
+    export CWPROOT=/home/yjl/cwp_su
+    export PATH=$PATH:$CWPROOT/bin
 
 3. # check directory
-	source ~/.bashrc 
-	echo $CWPROOT
+    source ~/.bashrc 
+    echo $CWPROOT
  
 4.  # Set up configure
-	tar -xzvf cwp_su_all_44R18.tgz
-	mv src $CWPROOT
-	cd $CWPROOT
-	cd src
-	cp configs/Makefile.config_Linux_i686 $CWPROOT/src/Makefile.config
+    cd /mnt/d     #the path of cwp_su_all_44R18.tgz
+    tar -xzvf cwp_su_all_44R18.tgz
+    cp -rf cwp_su_all_44R18/src $CWPROOT
+    cd $CWPROOT
+    cd src
+    cp configs/Makefile.config_Linux_i686 $CWPROOT/src/Makefile.config
 
 5.  # Install seismic unix
-	make install
-	make xtinstall
+    make install
+    make xtinstall
 
 6.  #test install 
     suplane|suxwigb &
