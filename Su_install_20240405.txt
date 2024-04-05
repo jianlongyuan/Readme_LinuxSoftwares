@@ -1,36 +1,42 @@
-Centos SU installation
+Ubuntu 18.04 LTS: SeisUnix installation
 
 0. # 在安装之前更新一下源，再输入命令预装软件包:
     sudo apt-get update
     sudo apt-get install build-essential libx11-dev libxt-dev libxmu-dev libxi-dev gfortran
 
-1. # Create a directory for install su, e.g.,
+1. 从以下GitHub网址下载SeisUnix安装包（在界面点击绿色方块“Code”，然后点    击“Download ZIP”）：
+    https://github.com/JohnWStockwellJr/SeisUnix
+
+2. # Create a directory for install su, e.g.,
     mkdir /home/yjl/cwp_su
     
     Noticing: 'yjl' is the user name of your computer
 
-2. # Set up environment:
+3. # Set up environment:
     vi ~/.bashrc
     export CWPROOT=/home/yjl/cwp_su
     export PATH=$PATH:$CWPROOT/bin
 
-3. # check directory
+4. # check directory
     source ~/.bashrc 
     echo $CWPROOT
  
-4.  # Set up configure
-    cd /mnt/d     #the path of cwp_su_all_44R18.tgz
-    tar -xzvf cwp_su_all_44R18.tgz
-    cp -rf cwp_su_all_44R18/src $CWPROOT
+5.  # Set up configure
+    cd /mnt/d     #the path of SeisUnix-master
+    unzip -r SeisUnix-master.zip
+    cp -rf SeisUnix-master/src $CWPROOT
     cd $CWPROOT
     cd src
     cp configs/Makefile.config_Linux_i686 $CWPROOT/src/Makefile.config
 
-5.  # Install seismic unix
+6.  # Install seismic unix
     make install
     make xtinstall
+    make utils
+    make sfinstall  # segd模块
+    
 
-6.  #test install 
+7.  #test install 
     suplane|suxwigb &
 
 
