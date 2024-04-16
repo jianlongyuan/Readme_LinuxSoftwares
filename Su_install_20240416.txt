@@ -23,7 +23,7 @@ Ubuntu 18.04 LTS: SeisUnix installation
  
 5.  # Set up configure
     cd /mnt/d     #the path of SeisUnix-master
-    unzip -r SeisUnix-master.zip
+    unzip  -q SeisUnix-master.zip
     cp -rf SeisUnix-master/src $CWPROOT
     cd $CWPROOT
     cd src
