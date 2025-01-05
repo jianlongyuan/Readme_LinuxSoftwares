@@ -1,0 +1,18 @@
+常见问题：
+
+问题一：geospy在使用F-K频散曲线计算时显示数据无source参数
+解决办法：需要在geospy主界面的“Event”子界面栏目增加震源信息，注意“Time”
+一般早于或等于波形起始时刻，
+
+
+问题二：geospy在打开重采样的sac文件，提示警告采样率不一致
+解决办法：将sac道头的采样率关键字重新赋值为新的采样率，例如：
+    stRawZ[0].stats.sac.delta = stRawZ[0].stats.delta   
+    stRawZ[0].stats.sac.odelta= stRawZ[0].stats.delta
+
+问题三：geospy的 Rec x 和 Rec y更改
+解决办法：需要在sac数据道头里面对以下关键字进行设置坐标，例如：
+
+    stRawZ[0].stats.sac.user7 = interval*ist  # 对应x
+    stRawZ[0].stats.sac.user8 = 0  # 对应y
+    stRawZ[0].stats.sac.user9 = 0  # 对应z

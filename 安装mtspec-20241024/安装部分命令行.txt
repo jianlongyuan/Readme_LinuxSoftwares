@@ -1,0 +1,11 @@
+1448  chmod +x Anaconda3-2024.10-1-Linux-x86_64.sh
+ 1450  ./Anaconda3-2024.10-1-Linux-x86_64.sh
+ 1458  sudo  vi /etc/profile
+ 1460  source /etc/profile
+ 1466  conda create --name mtspec python=3.8
+ 1467  conda activate mtspec
+ 1468  sudo apt-get install gfortran
+ 1469  conda install numpy pip
+ 1470  pip install mtspec
+ 1471  conda config --add channels conda-forge
+ 1472  conda install mtspec

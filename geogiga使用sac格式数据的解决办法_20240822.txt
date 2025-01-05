@@ -1,0 +1,4 @@
+
+先将sac按照道序号编排保存后（编辑脚本可参考：tool_readSACandResampling_20240821.py）
+
+再通过EQ-Launcher软件进行sac转换为sg2格式
